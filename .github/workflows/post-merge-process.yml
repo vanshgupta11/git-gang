@@ -76,7 +76,7 @@ jobs:
 
         if echo "$entry_section" | grep -qE -- '- Name:.+' && \
            echo "$entry_section" | grep -qE -- '- Username:.+' && \
-           echo "$entry_section" | grep -qE -- '- Message:.+'; then
+           echo "$entry_section" | grep -qE -- '- Message:'; then
           echo "has_new_entry=true" >> $GITHUB_OUTPUT
           echo "✓ New contribution detected for processing (simple format)"
         elif echo "$entry_section" | grep -qE -- '\[.+\]\(https://github.com/[a-zA-Z0-9_-]+\)'; then
