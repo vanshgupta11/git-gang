@@ -80,8 +80,7 @@ jobs:
             echo "Creating contribution issue $i of $NEEDED..."
 
             # Create issue using gh api with detailed instructions
-            BODY=$(cat /tmp/issue-body.txt)
-            gh api --repo ${{ github.repository }} repos/${{ github.repository }}/issues -X POST \
+            gh api repos/${{ github.repository }}/issues -X POST \
               -f title="Add your name to Git Gang" \
               -F body=/tmp/issue-body.txt \
               -f "labels[]=${LABEL_ARRAY[0]}" \
