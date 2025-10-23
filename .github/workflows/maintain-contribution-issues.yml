@@ -5,7 +5,7 @@ on:
     types: [closed]
   schedule:
     # Run daily at 00:00 UTC to ensure we always have 3 open issues
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 permissions:
@@ -18,68 +18,68 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check contribution issue count
-      id: check
-      run: |
-        # Count open issues with "contribution" label
-        OPEN_COUNT=$(gh issue list --repo ${{ github.repository }} --label contribution --state open --json number --jq 'length')
-        echo "Found $OPEN_COUNT open contribution issues"
-        
-        # Calculate how many we need to create
-        TARGET=3
-        NEEDED=$((TARGET - OPEN_COUNT))
-        
-        if [ $NEEDED -gt 0 ]; then
-          echo "need_to_create=$NEEDED" >> $GITHUB_OUTPUT
-          echo "Need to create $NEEDED more issue(s) to maintain $TARGET open issues"
-        else
-          echo "need_to_create=0" >> $GITHUB_OUTPUT
-          echo "Already have $TARGET or more open issues"
-        fi
-      env:
-        GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-    
-    - name: Create contribution issues
-      if: steps.check.outputs.need_to_create > 0
-      run: |
-        NEEDED=${{ steps.check.outputs.need_to_create }}
-        CURRENT_MONTH=$(date +%m)
-        
-        # Determine labels based on month
-        if [ "$CURRENT_MONTH" = "10" ]; then
-          echo "October detected - adding Hacktoberfest label"
-          LABELS="good first issue,help wanted,contribution,hacktoberfest"
-        else
-          LABELS="good first issue,help wanted,contribution"
-        fi
-        
-        # Split labels for gh api
-        IFS=',' read -ra LABEL_ARRAY <<< "$LABELS"
+      - name: Check contribution issue count
+        id: check
+        run: |
+          # Count open issues with "contribution" label
+          OPEN_COUNT=$(gh issue list --repo ${{ github.repository }} --label contribution --state open --json number --jq 'length')
+          echo "Found $OPEN_COUNT open contribution issues"
 
-        # Create the needed number of issues
-        for i in $(seq 1 $NEEDED); do
-          echo "Creating contribution issue $i of $NEEDED..."
+          # Calculate how many we need to create
+          TARGET=7
+          NEEDED=$((TARGET - OPEN_COUNT))
 
-          # Build labels JSON array
-          LABELS_JSON=""
-          for label in "${LABEL_ARRAY[@]}"; do
-            if [ -z "$LABELS_JSON" ]; then
-              LABELS_JSON="\"$label\""
-            else
-              LABELS_JSON="$LABELS_JSON,\"$label\""
-            fi
+          if [ $NEEDED -gt 0 ]; then
+            echo "need_to_create=$NEEDED" >> $GITHUB_OUTPUT
+            echo "Need to create $NEEDED more issue(s) to maintain $TARGET open issues"
+          else
+            echo "need_to_create=0" >> $GITHUB_OUTPUT
+            echo "Already have $TARGET or more open issues"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Create contribution issues
+        if: steps.check.outputs.need_to_create > 0
+        run: |
+          NEEDED=${{ steps.check.outputs.need_to_create }}
+          CURRENT_MONTH=$(date +%m)
+
+          # Determine labels based on month
+          if [ "$CURRENT_MONTH" = "10" ]; then
+            echo "October detected - adding Hacktoberfest label"
+            LABELS="good first issue,help wanted,contribution,hacktoberfest"
+          else
+            LABELS="good first issue,help wanted,contribution"
+          fi
+
+          # Split labels for gh api
+          IFS=',' read -ra LABEL_ARRAY <<< "$LABELS"
+
+          # Create the needed number of issues
+          for i in $(seq 1 $NEEDED); do
+            echo "Creating contribution issue $i of $NEEDED..."
+
+            # Build labels JSON array
+            LABELS_JSON=""
+            for label in "${LABEL_ARRAY[@]}"; do
+              if [ -z "$LABELS_JSON" ]; then
+                LABELS_JSON="\"$label\""
+              else
+                LABELS_JSON="$LABELS_JSON,\"$label\""
+              fi
+            done
+
+            # Create issue using gh api
+            gh api repos/${{ github.repository }}/issues -X POST \
+              -f title="Add your name to Git Gang" \
+              -f body="Add your name to the contributors list. See [README](https://github.com/SashankBhamidi/git-gang) for how to contribute." \
+              -f "labels[]=${LABEL_ARRAY[0]}" \
+              -f "labels[]=${LABEL_ARRAY[1]}" \
+              -f "labels[]=${LABEL_ARRAY[2]}" \
+              $([ "${LABEL_ARRAY[3]}" ] && echo "-f labels[]=${LABEL_ARRAY[3]}" || echo "")
           done
 
-          # Create issue using gh api
-          gh api repos/${{ github.repository }}/issues -X POST \
-            -f title="Add your name to Git Gang" \
-            -f body="Add your name to the contributors list. See [README](https://github.com/SashankBhamidi/git-gang) for how to contribute." \
-            -f "labels[]=${LABEL_ARRAY[0]}" \
-            -f "labels[]=${LABEL_ARRAY[1]}" \
-            -f "labels[]=${LABEL_ARRAY[2]}" \
-            $([ "${LABEL_ARRAY[3]}" ] && echo "-f labels[]=${LABEL_ARRAY[3]}" || echo "")
-        done
-        
-        echo "✅ Created $NEEDED contribution issue(s)"
-      env:
-        GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          echo "✅ Created $NEEDED contribution issue(s)"
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
