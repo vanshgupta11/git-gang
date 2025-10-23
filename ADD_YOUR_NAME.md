@@ -8,6 +8,6 @@ Want to join the Git Gang? Just fill out the form below.
 
 ## Add your entry below this line
 
-- Name: Hans
-- Username: hans-r7
-- Message: hacktoberfest is an awesome way of contributing to open source PRs!
+- Name:
+- Username:
+- Message:
