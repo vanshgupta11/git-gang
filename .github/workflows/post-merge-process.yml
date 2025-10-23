@@ -77,14 +77,15 @@ jobs:
           echo "---"
 
           # Check for format with dashes (preferred)
-          if echo "$entry_section" | grep -qE -- '- Name:.+' && \
-             echo "$entry_section" | grep -qE -- '- Username:.+' && \
+          # Use [^[:space:]] to ensure there's actual non-whitespace content after the colon
+          if echo "$entry_section" | grep -qE -- '- Name:[[:space:]]*[^[:space:]]+' && \
+             echo "$entry_section" | grep -qE -- '- Username:[[:space:]]*[^[:space:]]+' && \
              echo "$entry_section" | grep -qE -- '- Message:'; then
             echo "has_new_entry=true" >> $GITHUB_OUTPUT
             echo "✓ New contribution detected for processing (simple format with dashes)"
           # Also accept format without dashes (fallback for users who remove them)
-          elif echo "$entry_section" | grep -qE -- '^[[:space:]]*Name:.+' && \
-               echo "$entry_section" | grep -qE -- '^[[:space:]]*Username:.+' && \
+          elif echo "$entry_section" | grep -qE -- '^[[:space:]]*Name:[[:space:]]*[^[:space:]]+' && \
+               echo "$entry_section" | grep -qE -- '^[[:space:]]*Username:[[:space:]]*[^[:space:]]+' && \
                echo "$entry_section" | grep -qE -- '^[[:space:]]*Message:'; then
             echo "has_new_entry=true" >> $GITHUB_OUTPUT
             echo "✓ New contribution detected for processing (simple format without dashes)"
