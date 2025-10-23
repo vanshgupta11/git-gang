@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode Automater - Landing Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .description {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        
+        .description h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .description ul {
+            list-style-position: inside;
+            margin-left: 1rem;
+        }
+        
+        .description li {
+            margin: 0.5rem 0;
+        }
+        
+        .download-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .download-section h2 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .download-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 10px;
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .download-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .download-card p {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .instructions h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+        }
+        
+        .instructions ol {
+            margin-left: 2rem;
+        }
+        
+        .instructions li {
+            margin: 1rem 0;
+            line-height: 1.8;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+        
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 LeetCode Automater</h1>
+            <p class="subtitle">Automate Your LeetCode Submissions Effortlessly</p>
+        </header>
+        
+        <div class="description">
+            <h2>About the Project</h2>
+            <p>LeetCode Automater is a powerful Node.js-based automation tool designed to streamline your LeetCode practice workflow. This project helps you:</p>
+            <ul>
+                <li>Automatically fetch your solved LeetCode problems using GraphQL queries</li>
+                <li>Submit Java solutions to LeetCode using your authenticated session</li>
+                <li>Skip premium-only and database-only questions intelligently</li>
+                <li>Track your submission progress with detailed logging</li>
+                <li>Extract LeetCode tokens easily with the Chrome extension</li>
+            </ul>
+        </div>
+        
+        <div class="download-section">
+            <h2>📥 Download Options</h2>
+            <div class="download-grid">
+                <div class="download-card">
+                    <h3>🔌 Chrome Extension</h3>
+                    <p>Install the Chrome extension to easily extract your LeetCode session and CSRF tokens. Simply install the extension, visit LeetCode, and click the extension icon to get your tokens.</p>
+                    <a href="https://github.com/Omkumar2003/LeetcodeAutomater/releases/download/1.01/LeetCode-Token-Viewer.zip" class="download-btn">Download Extension</a>
+                </div>
+                
+                <div class="download-card">
+                    <h3>📦 Full Project (Source Code)</h3>
+                    <p>Download the complete project source code. Currently, there is no standalone .exe available. Download the full project to run the automation script on your machine.</p>
+                    <a href="https://github.com/Omkumar2003/LeetcodeAutomater/archive/refs/tags/1.01.zip" class="download-btn">Download ZIP</a>
+                </div>
+                
+                <div class="download-card">
+                    <h3>🔗 Visit Releases Page</h3>
+                    <p>Visit the official releases page to view all available downloads, release notes, and version history. Get the latest updates and improvements.</p>
+                    <a href="https://github.com/Omkumar2003/LeetcodeAutomater/releases" class="download-btn">View Releases</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>🛠️ How to Run the Project</h2>
+            <div class="note">
+                <strong>Note:</strong> A standalone .exe file is not currently available. Please follow these steps to run the project from source.
+            </div>
+            <ol>
+                <li><strong>Download the Project:</strong> Download the source code ZIP file from the releases page or clone the repository using Git.</li>
+                <li><strong>Extract the Files:</strong> Unzip the downloaded file to your preferred location.</li>
+                <li><strong>Install Node.js:</strong> Make sure you have Node.js installed on your system. You can download it from <a href="https://nodejs.org/" target="_blank">nodejs.org</a>.</li>
+                <li><strong>Install Dependencies:</strong> Open a terminal/command prompt in the project directory and run:<br><code>npm install</code></li>
+                <li><strong>Get Your Tokens:</strong> Use the Chrome extension to extract your LeetCode session and CSRF tokens.</li>
+                <li><strong>Configure the Script:</strong> Add your session and CSRF tokens to the configuration file as instructed in the README.</li>
+                <li><strong>Run the Script:</strong> Execute the automation script with:<br><code>node ok.js</code></li>
+            </ol>
+        </div>
+        
+        <footer>
+            <p>Made with ❤️ for the LeetCode Community</p>
+            <p><a href="https://github.com/Omkumar2003/LeetcodeAutomater" target="_blank">View on GitHub</a> | <a href="https://github.com/Omkumar2003/LeetcodeAutomater/releases" target="_blank">Releases</a></p>
+        </footer>
+    </div>
+</body>
+</html>
