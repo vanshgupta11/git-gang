@@ -2,7 +2,7 @@ name: Process Contribution
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened, labeled, unlabeled, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review]
     branches: [master]
   pull_request_review:
     types: [submitted]
@@ -21,10 +21,6 @@ permissions:
 
 jobs:
   validate-and-process:
-    # Only run on pull_request_target or pull_request_review events, skip labeled/unlabeled
-    if: |
-      (github.event_name == 'pull_request_target' && !contains(fromJSON('["labeled","unlabeled"]'), github.event.action || '')) ||
-      (github.event_name == 'pull_request_review')
     runs-on: ubuntu-latest
     permissions:
       contents: write
