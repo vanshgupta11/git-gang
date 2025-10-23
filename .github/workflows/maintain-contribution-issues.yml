@@ -22,7 +22,7 @@ jobs:
       id: check
       run: |
         # Count open issues with "contribution" label
-        OPEN_COUNT=$(gh issue list --label contribution --state open --json number --jq 'length')
+        OPEN_COUNT=$(gh issue list --repo ${{ github.repository }} --label contribution --state open --json number --jq 'length')
         echo "Found $OPEN_COUNT open contribution issues"
         
         # Calculate how many we need to create
