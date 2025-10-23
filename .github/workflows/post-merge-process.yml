@@ -76,11 +76,18 @@ jobs:
           echo "$entry_section"
           echo "---"
 
+          # Check for format with dashes (preferred)
           if echo "$entry_section" | grep -qE -- '- Name:.+' && \
              echo "$entry_section" | grep -qE -- '- Username:.+' && \
              echo "$entry_section" | grep -qE -- '- Message:'; then
             echo "has_new_entry=true" >> $GITHUB_OUTPUT
-            echo "✓ New contribution detected for processing (simple format)"
+            echo "✓ New contribution detected for processing (simple format with dashes)"
+          # Also accept format without dashes (fallback for users who remove them)
+          elif echo "$entry_section" | grep -qE -- '^[[:space:]]*Name:.+' && \
+               echo "$entry_section" | grep -qE -- '^[[:space:]]*Username:.+' && \
+               echo "$entry_section" | grep -qE -- '^[[:space:]]*Message:'; then
+            echo "has_new_entry=true" >> $GITHUB_OUTPUT
+            echo "✓ New contribution detected for processing (simple format without dashes)"
           elif echo "$entry_section" | grep -qE -- '\[.+\]\(https://github.com/[a-zA-Z0-9_-]+\)'; then
             echo "has_new_entry=true" >> $GITHUB_OUTPUT
             echo "✓ New contribution detected for processing (markdown format)"

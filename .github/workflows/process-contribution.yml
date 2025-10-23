@@ -185,6 +185,7 @@ jobs:
 
       - name: Create moderation issue for profanity
         if: steps.validate.outputs.profanity_detected == 'true'
+        id: moderation-issue
         run: |
           # Create issue body in temp file to handle special characters
           cat > /tmp/moderation-issue.md << 'ISSUE_EOF'
@@ -199,7 +200,7 @@ jobs:
           Flagged in name: NAME_FLAG_PLACEHOLDER
           Flagged in message: MESSAGE_FLAG_PLACEHOLDER
 
-          Take a look and decide what to do.
+          Take a look and decide what to do. Approving and merging the PR will automatically close this issue.
 
           - [ ] Reviewed
           - [ ] Handled
@@ -214,10 +215,23 @@ jobs:
           sed -i "s|NAME_FLAG_PLACEHOLDER|${{ steps.validate.outputs.profanity_in_name }}|g" /tmp/moderation-issue.md
           sed -i "s|MESSAGE_FLAG_PLACEHOLDER|${{ steps.validate.outputs.profanity_in_message }}|g" /tmp/moderation-issue.md
 
-          gh issue create --title "Review entry from @${{ steps.validate.outputs.username }}" \
+          # Create issue and capture the issue number
+          ISSUE_URL=$(gh issue create --title "Review entry from @${{ steps.validate.outputs.username }}" \
             --body-file /tmp/moderation-issue.md \
             --label "moderation,urgent" \
-            --assignee SashankBhamidi
+            --assignee SashankBhamidi)
+
+          ISSUE_NUMBER=$(echo "$ISSUE_URL" | grep -oE '[0-9]+$')
+          echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+          echo "Created moderation issue #$ISSUE_NUMBER"
+
+          # Update PR body to link the moderation issue (will auto-close when PR is merged/closed)
+          CURRENT_BODY=$(gh api "repos/${{ github.repository }}/pulls/$PR_NUMBER" --jq '.body // ""')
+          echo "$CURRENT_BODY" > /tmp/pr-body-update.txt
+          echo "" >> /tmp/pr-body-update.txt
+          echo "Closes #${ISSUE_NUMBER}" >> /tmp/pr-body-update.txt
+          gh pr edit $PR_NUMBER --body-file /tmp/pr-body-update.txt
+          echo "✓ Linked moderation issue #$ISSUE_NUMBER to PR #$PR_NUMBER"
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
