@@ -70,17 +70,21 @@ jobs:
         entry_section=$(echo "$content" | sed -n '/Add your entry below this line/,$p')
 
         # Check if there's actual content (not just empty template)
+        echo "DEBUG: Checking entry section:"
+        echo "$entry_section"
+        echo "---"
+
         if echo "$entry_section" | grep -qE '- Name:.+' && \
            echo "$entry_section" | grep -qE '- Username:.+' && \
-           echo "$entry_section" | grep -qE '- Message:'; then
+           echo "$entry_section" | grep -qE '- Message:.+'; then
           echo "has_new_entry=true" >> $GITHUB_OUTPUT
-          echo "New contribution detected for processing (simple format)"
+          echo "✓ New contribution detected for processing (simple format)"
         elif echo "$entry_section" | grep -qE '\[.+\]\(https://github.com/[a-zA-Z0-9_-]+\)'; then
           echo "has_new_entry=true" >> $GITHUB_OUTPUT
-          echo "New contribution detected for processing (markdown format)"
+          echo "✓ New contribution detected for processing (markdown format)"
         else
           echo "has_new_entry=false" >> $GITHUB_OUTPUT
-          echo "No new contribution to process"
+          echo "ℹ No new contribution to process (template is empty)"
         fi
       env:
         GH_TOKEN: ${{ github.token }}
