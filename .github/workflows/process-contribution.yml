@@ -123,7 +123,7 @@ jobs:
               echo "" >> /tmp/pr-body.txt
               echo "Resolves #${UNASSIGNED_ISSUE}" >> /tmp/pr-body.txt
               if gh pr edit $PR_NUMBER --body-file /tmp/pr-body.txt 2>/dev/null; then
-                echo "✓ Linked PR to unassigned contribution issue #$UNASSIGNED_ISSUE"
+                echo "Linked PR to unassigned contribution issue #$UNASSIGNED_ISSUE"
               else
                 echo "Warning: Could not link issue, but continuing workflow"
               fi
@@ -149,32 +149,32 @@ jobs:
           if [ "$PR_AUTHOR" != "$ENTRY_USERNAME" ]; then
             echo "valid=false" >> $GITHUB_OUTPUT
             echo "error=Username mismatch: Your GitHub username is @$PR_AUTHOR but you entered @$ENTRY_USERNAME. Please use your own GitHub username." >> $GITHUB_OUTPUT
-            echo "❌ Username validation failed"
+            echo "Username validation failed"
           else
             echo "valid=true" >> $GITHUB_OUTPUT
-            echo "✅ Username matches PR author"
+            echo "Username matches PR author"
           fi
 
       - name: Approve and comment on valid contribution
         if: steps.file-check.outputs.valid == 'true' && steps.validate.outputs.valid == 'true' && steps.validate.outputs.profanity_detected != 'true' && steps.username-check.outputs.valid == 'true'
         run: |
           # Create comment body in temp file to handle special characters
-          cat > /tmp/approval-comment.md <<'COMMENT_EOF'
-## Approved - Ready to Merge
+          cat > /tmp/approval-comment.md << 'COMMENT_EOF'
+          ## Approved - Ready to Merge
 
-Your entry looks good:
-```
-ENTRY_PLACEHOLDER
-```
+          Your entry looks good:
+          ```
+          ENTRY_PLACEHOLDER
+          ```
 
-### Validation Results
-- Format is correct
-- No duplicates found
-- Content looks clean
-- Username matches PR author
+          ### Validation Results
+          - Format is correct
+          - No duplicates found
+          - Content looks clean
+          - Username matches PR author
 
-This PR is **approved** and will be automatically merged. Once merged, you'll be added to the [contributors list](https://github.com/SashankBhamidi/git-gang/blob/master/CONTRIBUTORS.md). Welcome to the Git Gang!
-COMMENT_EOF
+          This PR is **approved** and will be automatically merged. Once merged, you'll be added to the [contributors list](https://github.com/SashankBhamidi/git-gang/blob/master/CONTRIBUTORS.md). Welcome to the Git Gang!
+          COMMENT_EOF
 
           # Replace placeholders
           sed -i "s|ENTRY_PLACEHOLDER|${{ steps.validate.outputs.entry }}|g" /tmp/approval-comment.md
@@ -206,23 +206,23 @@ COMMENT_EOF
         id: moderation-issue
         run: |
           # Create issue body in temp file to handle special characters
-          cat > /tmp/moderation-issue.md <<'ISSUE_EOF'
-Content filter flagged this entry before merge.
+          cat > /tmp/moderation-issue.md << 'ISSUE_EOF'
+          Content filter flagged this entry before merge.
 
-- Entry: ENTRY_PLACEHOLDER
-- Username: @USERNAME_PLACEHOLDER
-- PR: #PR_NUMBER_PLACEHOLDER
-- Name: NAME_PLACEHOLDER
-- Message: MESSAGE_PLACEHOLDER
+          - Entry: ENTRY_PLACEHOLDER
+          - Username: @USERNAME_PLACEHOLDER
+          - PR: #PR_NUMBER_PLACEHOLDER
+          - Name: NAME_PLACEHOLDER
+          - Message: MESSAGE_PLACEHOLDER
 
-Flagged in name: NAME_FLAG_PLACEHOLDER
-Flagged in message: MESSAGE_FLAG_PLACEHOLDER
+          Flagged in name: NAME_FLAG_PLACEHOLDER
+          Flagged in message: MESSAGE_FLAG_PLACEHOLDER
 
-Take a look and decide what to do. Approving and merging the PR will automatically close this issue.
+          Take a look and decide what to do. Approving and merging the PR will automatically close this issue.
 
-- [ ] Reviewed
-- [ ] Handled
-ISSUE_EOF
+          - [ ] Reviewed
+          - [ ] Handled
+          ISSUE_EOF
 
           # Replace placeholders
           sed -i "s|ENTRY_PLACEHOLDER|${{ steps.validate.outputs.entry }}|g" /tmp/moderation-issue.md
@@ -249,7 +249,7 @@ ISSUE_EOF
           echo "" >> /tmp/pr-body-update.txt
           echo "Closes #${ISSUE_NUMBER}" >> /tmp/pr-body-update.txt
           gh pr edit $PR_NUMBER --body-file /tmp/pr-body-update.txt
-          echo "✓ Linked moderation issue #$ISSUE_NUMBER to PR #$PR_NUMBER"
+          echo "Linked moderation issue #$ISSUE_NUMBER to PR #$PR_NUMBER"
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
@@ -277,79 +277,79 @@ ISSUE_EOF
           steps.file-check.outputs.is_contribution == 'true'
         run: |
           if [ "${{ steps.file-check.outputs.valid }}" == "false" ]; then
-            cat > /tmp/error-comment.md <<'ERROR_EOF'
-## Unauthorized File Changes Detected
+            cat > /tmp/error-comment.md << 'ERROR_EOF'
+            ## Unauthorized File Changes Detected
 
-**Issue:** ${{ steps.file-check.outputs.error_message }}
+            **Issue:** ${{ steps.file-check.outputs.error_message }}
 
-### What you need to do
-Contributions should **only** modify `ADD_YOUR_NAME.md`. Please:
-1. Remove changes to other files
-2. Keep only your entry in `ADD_YOUR_NAME.md`
-3. Push the update
+            ### What you need to do
+            Contributions should **only** modify `ADD_YOUR_NAME.md`. Please:
+            1. Remove changes to other files
+            2. Keep only your entry in `ADD_YOUR_NAME.md`
+            3. Push the update
 
-This PR has been flagged for manual review.
-ERROR_EOF
+            This PR has been flagged for manual review.
+            ERROR_EOF
             gh pr comment $PR_NUMBER --body-file /tmp/error-comment.md
             gh pr edit $PR_NUMBER --add-label "unauthorized"
           elif [ "${{ steps.validate.outputs.valid }}" == "false" ]; then
             # Check if it's a duplicate entry
             if echo "${{ steps.validate.outputs.error_message }}" | grep -q "already been added"; then
-              cat > /tmp/duplicate-comment.md <<'DUP_EOF'
-## Already a Contributor
+              cat > /tmp/duplicate-comment.md << 'DUP_EOF'
+              ## Already a Contributor
 
-Looks like you've already joined the Git Gang - your name is already in the [contributors list](https://github.com/SashankBhamidi/git-gang/blob/master/CONTRIBUTORS.md).
+              Looks like you've already joined the Git Gang - your name is already in the [contributors list](https://github.com/SashankBhamidi/git-gang/blob/master/CONTRIBUTORS.md).
 
-Thanks for your enthusiasm, but we can only add each person once. Closing this PR.
-DUP_EOF
+              Thanks for your enthusiasm, but we can only add each person once. Closing this PR.
+              DUP_EOF
               gh pr comment $PR_NUMBER --body-file /tmp/duplicate-comment.md
               gh pr edit $PR_NUMBER --add-label "duplicate"
               gh pr close $PR_NUMBER
             else
-              cat > /tmp/fix-comment.md <<'FIX_EOF'
-## Validation Failed - Fix Required
+              cat > /tmp/fix-comment.md << 'FIX_EOF'
+              ## Validation Failed - Fix Required
 
-There's an issue with your entry:
+              There's an issue with your entry:
 
-**Issue:** ${{ steps.validate.outputs.error_message }}
+              **Issue:** ${{ steps.validate.outputs.error_message }}
 
-### How to fix
-1. Click on the **Files changed** tab
-2. Click the pencil icon to edit `ADD_YOUR_NAME.md`
-3. Fix the issue mentioned above
-4. Commit the changes
+              ### How to fix
+              1. Click on the **Files changed** tab
+              2. Click the pencil icon to edit `ADD_YOUR_NAME.md`
+              3. Fix the issue mentioned above
+              4. Commit the changes
 
-The validation will run again automatically when you push the update.
-FIX_EOF
+              The validation will run again automatically when you push the update.
+              FIX_EOF
               gh pr comment $PR_NUMBER --body-file /tmp/fix-comment.md
               gh pr edit $PR_NUMBER --add-label "invalid"
             fi
           elif [ "${{ steps.username-check.outputs.valid }}" == "false" ]; then
-            cat > /tmp/username-comment.md <<'USER_EOF'
-## Username Mismatch
+            cat > /tmp/username-comment.md << 'USER_EOF'
+            ## Username Mismatch
 
-Your GitHub username is **@$PR_AUTHOR** but you entered **@${{ steps.validate.outputs.username }}**.
+            Your GitHub username is **@$PR_AUTHOR** but you entered **@${{ steps.validate.outputs.username }}**.
 
-### How to fix
-Please update your entry in `ADD_YOUR_NAME.md` to use your own GitHub username: **@$PR_AUTHOR**
+            ### How to fix
+            Please update your entry in `ADD_YOUR_NAME.md` to use your own GitHub username: **@$PR_AUTHOR**
 
-You cannot submit entries on behalf of others.
-USER_EOF
+            You cannot submit entries on behalf of others.
+            USER_EOF
             gh pr comment $PR_NUMBER --body-file /tmp/username-comment.md
             gh pr edit $PR_NUMBER --add-label "invalid"
           elif [ "${{ steps.validate.outputs.profanity_detected }}" == "true" ]; then
-            cat > /tmp/moderation-comment.md <<'MOD_EOF'
-## Flagged for Manual Review
+            cat > /tmp/moderation-comment.md << 'MOD_EOF'
+            ## Flagged for Manual Review
 
-Your entry was flagged by our content filter and needs manual review.
+            Your entry was flagged by our content filter and needs manual review.
 
-### What happens next
-- A maintainer will review your entry shortly
-- If approved, your PR will be merged automatically
-- You'll be notified of the decision
+            ### What happens next
+            - A maintainer will review your entry shortly
+            - If approved, your PR will be merged automatically
+            - You'll be notified of the decision
 
-Please be patient while we review. Thank you!
-MOD_EOF
+            Please be patient while we review. Thank you!
+            MOD_EOF
             gh pr comment $PR_NUMBER --body-file /tmp/moderation-comment.md
             gh pr edit $PR_NUMBER --add-label "moderation"
           fi
