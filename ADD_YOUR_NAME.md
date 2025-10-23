@@ -8,6 +8,6 @@ Want to join the Git Gang? Just fill out the form below.
 
 ## Add your entry below this line
 
-- Name:prithviraj 
-- Username:bundela05 
-- Message:letzz go! 
+- Name: 
+- Username: 
+- Message: 
