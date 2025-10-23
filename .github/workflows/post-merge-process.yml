@@ -15,6 +15,8 @@ permissions:
 
 jobs:
   process-merged-contribution:
+    # Only run in the main repository, not in forks
+    if: github.repository == 'SashankBhamidi/git-gang'
     runs-on: ubuntu-latest
     permissions:
       contents: write

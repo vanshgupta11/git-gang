@@ -13,8 +13,10 @@ permissions:
 
 jobs:
   maintain-issues:
+    # Only run in the main repository, not in forks
+    if: github.repository == 'SashankBhamidi/git-gang'
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Check contribution issue count
       id: check
