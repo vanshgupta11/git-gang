@@ -56,24 +56,9 @@ jobs:
           # Split labels for gh api
           IFS=',' read -ra LABEL_ARRAY <<< "$LABELS"
 
-          # Create the needed number of issues
-          for i in $(seq 1 $NEEDED); do
-            echo "Creating contribution issue $i of $NEEDED..."
-
-            # Build labels JSON array
-            LABELS_JSON=""
-            for label in "${LABEL_ARRAY[@]}"; do
-              if [ -z "$LABELS_JSON" ]; then
-                LABELS_JSON="\"$label\""
-              else
-                LABELS_JSON="$LABELS_JSON,\"$label\""
-              fi
-            done
-
-            # Create issue using gh api with detailed instructions
-            gh api repos/${{ github.repository }}/issues -X POST \
-              -f title="Add your name to Git Gang" \
-              -f body="Add your name to the contributors list.
+          # Define issue body
+          ISSUE_BODY=$(cat <<'EOF'
+Add your name to the contributors list.
 
 ## How to contribute
 
@@ -87,7 +72,18 @@ jobs:
 5. Open a pull request
 6. Automation validates and merges automatically
 
-See [README](https://github.com/SashankBhamidi/git-gang/blob/master/README.md) for details." \
+See [README](https://github.com/SashankBhamidi/git-gang/blob/master/README.md) for details.
+EOF
+)
+
+          # Create the needed number of issues
+          for i in $(seq 1 $NEEDED); do
+            echo "Creating contribution issue $i of $NEEDED..."
+
+            # Create issue using gh api with detailed instructions
+            gh api --repo ${{ github.repository }} repos/${{ github.repository }}/issues -X POST \
+              -f title="Add your name to Git Gang" \
+              -f body="$ISSUE_BODY" \
               -f "labels[]=${LABEL_ARRAY[0]}" \
               -f "labels[]=${LABEL_ARRAY[1]}" \
               -f "labels[]=${LABEL_ARRAY[2]}" \
