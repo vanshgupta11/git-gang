@@ -51,26 +51,31 @@ jobs:
           LABELS="good first issue,help wanted,contribution"
         fi
         
+        # Split labels for gh api
+        IFS=',' read -ra LABEL_ARRAY <<< "$LABELS"
+
         # Create the needed number of issues
         for i in $(seq 1 $NEEDED); do
           echo "Creating contribution issue $i of $NEEDED..."
-          gh issue create \
-            --title "Add your name to Git Gang" \
-            --label "$LABELS" \
-            --body "Add your name to the contributors list.
 
-## How to contribute
+          # Build labels JSON array
+          LABELS_JSON=""
+          for label in "${LABEL_ARRAY[@]}"; do
+            if [ -z "$LABELS_JSON" ]; then
+              LABELS_JSON="\"$label\""
+            else
+              LABELS_JSON="$LABELS_JSON,\"$label\""
+            fi
+          done
 
-1. Open [ADD_YOUR_NAME.md](https://github.com/SashankBhamidi/git-gang/blob/master/ADD_YOUR_NAME.md)
-2. Click the edit icon
-3. Fill out:
-   - Name: Your Name
-   - Username: your-github-username
-   - Message: Optional message
-4. Open a pull request
-5. Automation validates and merges automatically
-
-See [README](https://github.com/SashankBhamidi/git-gang/blob/master/README.md) for details."
+          # Create issue using gh api
+          gh api repos/${{ github.repository }}/issues -X POST \
+            -f title="Add your name to Git Gang" \
+            -f body="Add your name to the contributors list. See [README](https://github.com/SashankBhamidi/git-gang) for how to contribute." \
+            -f "labels[]=${LABEL_ARRAY[0]}" \
+            -f "labels[]=${LABEL_ARRAY[1]}" \
+            -f "labels[]=${LABEL_ARRAY[2]}" \
+            $([ "${LABEL_ARRAY[3]}" ] && echo "-f labels[]=${LABEL_ARRAY[3]}" || echo "")
         done
         
         echo "✅ Created $NEEDED contribution issue(s)"
