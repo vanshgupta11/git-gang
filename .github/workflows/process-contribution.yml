@@ -169,7 +169,7 @@ jobs:
           - Username matches PR author
 
           This PR is **approved** and will be automatically merged. Once merged, you'll be added to the [contributors list](https://github.com/SashankBhamidi/git-gang/blob/master/CONTRIBUTORS.md). Welcome to the Git Gang!
-          COMMENT_EOF
+COMMENT_EOF
 
           # Replace placeholders
           sed -i "s|ENTRY_PLACEHOLDER|${{ steps.validate.outputs.entry }}|g" /tmp/approval-comment.md
@@ -217,7 +217,7 @@ jobs:
 
           - [ ] Reviewed
           - [ ] Handled
-          ISSUE_EOF
+ISSUE_EOF
 
           # Replace placeholders
           sed -i "s|ENTRY_PLACEHOLDER|${{ steps.validate.outputs.entry }}|g" /tmp/moderation-issue.md
@@ -284,7 +284,7 @@ jobs:
             3. Push the update
 
             This PR has been flagged for manual review.
-            ERROR_EOF
+ERROR_EOF
             gh pr comment $PR_NUMBER --body-file /tmp/error-comment.md
             gh pr edit $PR_NUMBER --add-label "unauthorized"
           elif [ "${{ steps.validate.outputs.valid }}" == "false" ]; then
@@ -295,11 +295,10 @@ jobs:
 
               Looks like you've already joined the Git Gang - your name is already in the [contributors list](https://github.com/SashankBhamidi/git-gang/blob/master/CONTRIBUTORS.md).
 
-              Thanks for your enthusiasm, but we can only add each person once. Closing this PR.
-              DUP_EOF
+              Thanks for your enthusiasm, but we can only add each person once. We'll keep this PR open, but no new entry will be added.
+DUP_EOF
               gh pr comment $PR_NUMBER --body-file /tmp/duplicate-comment.md
               gh pr edit $PR_NUMBER --add-label "duplicate"
-              gh pr close $PR_NUMBER
             else
               cat > /tmp/fix-comment.md << 'FIX_EOF'
               ## Validation Failed - Fix Required
@@ -315,7 +314,7 @@ jobs:
               4. Commit the changes
 
               The validation will run again automatically when you push the update.
-              FIX_EOF
+FIX_EOF
               gh pr comment $PR_NUMBER --body-file /tmp/fix-comment.md
               gh pr edit $PR_NUMBER --add-label "invalid"
             fi
@@ -329,7 +328,7 @@ jobs:
             Please update your entry in `ADD_YOUR_NAME.md` to use your own GitHub username: **@$PR_AUTHOR**
 
             You cannot submit entries on behalf of others.
-            USER_EOF
+USER_EOF
             gh pr comment $PR_NUMBER --body-file /tmp/username-comment.md
             gh pr edit $PR_NUMBER --add-label "invalid"
           elif [ "${{ steps.validate.outputs.profanity_detected }}" == "true" ]; then
@@ -344,7 +343,7 @@ jobs:
             - You'll be notified of the decision
 
             Please be patient while we review. Thank you!
-            MOD_EOF
+MOD_EOF
             gh pr comment $PR_NUMBER --body-file /tmp/moderation-comment.md
             gh pr edit $PR_NUMBER --add-label "moderation"
           fi
