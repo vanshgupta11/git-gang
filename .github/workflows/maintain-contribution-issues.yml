@@ -60,7 +60,7 @@ jobs:
           cat > /tmp/issue-body.txt << 'EOFBODY'
           Add your name to the contributors list.
 
-          **Note:** No need to ask for assignment - just create your PR directly by following the steps below!
+          **Note:** No need to ask for assignment - the automation system will auto-assign you an issue within the PR. Just follow the steps below!
 
           ## How to contribute
 
