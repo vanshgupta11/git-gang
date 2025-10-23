@@ -8,6 +8,6 @@ Want to join the Git Gang? Just fill out the form below.
 
 ## Add your entry below this line
 
-- Name: Asha Saini
-- Username: AshaSaini-033
-- Message: Thank You 
+- Name: 
+- Username: 
+- Message: 

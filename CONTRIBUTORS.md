@@ -4,13 +4,14 @@ Welcome to the Git Gang! These amazing developers have joined our community.
 
 ## Our Contributors
 
-Total contributors: 29
+Total contributors: 30
 
 - [Sashank Bhamidi](https://github.com/SashankBhamidi) - Creator of Git Gang - building GitHub's biggest contributors list!
 - [Aditya](https://github.com/aditya-yadav1176) - heyy
 - [Ameya](https://github.com/Raptor0G) - Let's cook!
 - [Amrita Mishra](https://github.com/amritamishra01) - Excited to join the Git Gang and contribute! 🌸
 - [Ansh](https://github.com/ansh3108) - sup?!
+- [Asha Saini](https://github.com/AshaSaini-033) - Thank You
 - [Astel Tom](https://github.com/astel-code)
 - [Divyansh Mishra](https://github.com/mishraa-G) - Excited to tackle some good issues
 - [Hans](https://github.com/hans-r7) - hacktoberfest is an awesome way of contributing to open source PRs!
@@ -35,3 +36,6 @@ Total contributors: 29
 - [Ugur Ozcan](https://github.com/uozcan12) - Hello Git Gang contributors!
 - [Vedant Tapkir](https://github.com/Octaflick) - My 2nd PR
 - [Vihaan Zutshi](https://github.com/vihaanified) - Can't wait to see this grow!
+
+
+
