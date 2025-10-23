@@ -60,11 +60,13 @@ jobs:
           cat > /tmp/issue-body.txt << 'EOFBODY'
           Add your name to the contributors list.
 
+          **Note:** No need to ask for assignment - just create your PR directly by following the steps below!
+
           ## How to contribute
 
-          1. **Star this repository** ⭐ (helps us reach more contributors!)
+          1. **Star this repository** (helps us reach more contributors!)
           2. Open [ADD_YOUR_NAME.md](https://github.com/SashankBhamidi/git-gang/blob/master/ADD_YOUR_NAME.md)
-          3. Click the edit icon ✏️
+          3. Click the edit icon
           4. Fill out:
              - Name: Your Name
              - Username: your-github-username
@@ -82,7 +84,7 @@ jobs:
             # Create issue using gh api with detailed instructions
             gh api repos/${{ github.repository }}/issues -X POST \
               -f title="Add your name to Git Gang" \
-              -F body=/tmp/issue-body.txt \
+              -F body=@/tmp/issue-body.txt \
               -f "labels[]=${LABEL_ARRAY[0]}" \
               -f "labels[]=${LABEL_ARRAY[1]}" \
               -f "labels[]=${LABEL_ARRAY[2]}" \
